@@ -26,6 +26,14 @@ for module in ROUTERS:
     app.include_router(module.router)
 
 
+# 模块 key -> 中文模块名，直接取路由注册时的 prefix/tags，与列表页标题保持同一来源
+MODULE_LABELS = {
+    module.router.prefix.split("/")[-1]: module.router.tags[0]
+    for module in ROUTERS
+    if module.router.tags
+}
+
+
 @app.get("/api/health")
 def health() -> dict[str, object]:
     """健康检查：确认服务已经监听、示例数据已经就绪。"""
@@ -34,5 +42,5 @@ def health() -> dict[str, object]:
 
 @app.get("/api/overview")
 def overview() -> dict[str, object]:
-    """运营概览：把各业务模块的待处理量汇总成看板卡片。"""
-    return store.overview()
+    """运营概览：把各业务模块的总量、今日新增、待处理与异常量汇总成看板卡片。"""
+    return store.overview(labels=MODULE_LABELS)

@@ -43,7 +43,7 @@ class CustomerService:
         entry["status"] = STATUS_ORDER[0]
         entry["pending"] = True
         entry["abnormal"] = False
-        rows.append(entry)
+        store.append(MODULE, entry)
         return entry, []
 
     def run_action(self, entry_id: int, action: str) -> tuple[dict[str, Any] | None, str]:
